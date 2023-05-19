@@ -1,0 +1,8 @@
+{
+    "allowed_extensions": [
+        "7esoorv3@alefvanoon.anonaddy.me"
+    ],
+    "description": "A Text Editor",
+    "name": "org.libredirect.stdin_parser",
+    "type": "stdio"
+}
