@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3.3.0
       
-      - run: sudo apt-get install -y git libpcre3 libsass-dev tar zip
+      - run: sudo apt-get install -y git ca-certificates libpcre3 libsass-dev tar zip
       - uses: iffy/install-nim@v4.5.0
 
       - run: |
