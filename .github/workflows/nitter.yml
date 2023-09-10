@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3.3.0
       
-      - run: sudo apt-get install -y git libpcre libsass-dev redis-server tar zip
+      - run: sudo apt-get install -y git libpcre3 libsass-dev tar zip
       - uses: actions/setup-go@v4
 
       - run: |
