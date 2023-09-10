@@ -8,9 +8,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3.3.0
       
-      - uses: ATiltedTree/setup-rust@v1.0.5
+      - uses: brndnmtthws/rust-action-rustup@v1.0.0
         with:
-          targets: true
+          targets: x86_64-unknown-linux-gnu x86_64-pc-windows-gnu
       
       - run: sudo apt-get install -y git tar zip
 
