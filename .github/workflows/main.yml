@@ -19,6 +19,8 @@ jobs:
 
       - name: Build
       - run: go mod download
+
+      - name: Another Build
       - run: go build -ldflags "-X codeberg.org/rimgo/rimgo/pages.VersionInfo=$(date '+%Y-%m-%d')-$(git rev-list --abbrev-commit -1 HEAD)"
 
       - name: Upload Go Artifact
