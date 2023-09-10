@@ -15,11 +15,14 @@ jobs:
           go-version: '1.20'
       - run: sudo apt-get install -y ca-certificates git nodejs npm
       - run: git clone https://codeberg.org/rimgo/rimgo
-      - run: cd rimgo/
-      - run: go mod download
-      - run: go build -ldflags "-X codeberg.org/rimgo/rimgo/pages.VersionInfo=$(date '+%Y-%m-%d')-$(git rev-list --abbrev-commit -1 HEAD)"
+      
+      - working-directory: ./rimgo
+        run: go mod download
+      
+      - working-directory: ./rimgo
+        run: go build -ldflags "-X codeberg.org/rimgo/rimgo/pages.VersionInfo=$(date '+%Y-%m-%d')-$(git rev-list --abbrev-commit -1 HEAD)"
 
       - name: Upload Go Artifact
         uses: actions/upload-artifact@v3
         with:
-          path: ./rimgo
+          path: ./rimgo/rimgo
