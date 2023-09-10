@@ -17,7 +17,7 @@ jobs:
           git clone --depth 1 https://github.com/zedeus/nitter
           cd nitter/
 
-          nimble install
+          nimble install -y
           nimble build -d:release --cpu:amd64 --os:linux && mv nitter ../nitter_linux_x86_64
           nimble build -d:release --cpu:amd64 -d:mingw && mv nitter.exe ../nitter_windows_x86_64.exe
           nimble scss
