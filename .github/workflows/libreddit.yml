@@ -8,7 +8,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3.3.0
       
-      - run: sudo apt-get install -y git tar zip musl-tools
+      - run: sudo apt-get install -y git tar zip musl-tools musl-dev
       
       - uses: brndnmtthws/rust-action-rustup@v1.0.0
         with:
