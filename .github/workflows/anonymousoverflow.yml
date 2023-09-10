@@ -1,0 +1,44 @@
+name: AnonymousOverflow build
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.3.0
+      
+      - run: sudo apt-get install -y git tar zip
+      - uses: actions/setup-go@v4
+
+      - run: |
+          mkdir anonymousoverflow
+          cd anonymousoverflow/
+          git clone --depth 1 https://github.com/httpjamesm/AnonymousOverflow
+          cd AnonymousOverflow/
+
+          GOARCH=amd64 GOOS=linux go build && mv anonymousoverflow ../anonymousoverflow_linux_x86_64
+          GOARCH=amd64 GOOS=windows go build && mv anonymousoverflow.exe ../anonymousoverflow_windows_x86_64.exe
+          mv templates/ ../
+          mv public/ ../
+
+          cd ../../
+
+          tar -czvf anonymousoverflow_linux_x86_64.tar.gz anonymousoverflow/anonymousoverflow_linux_x86_64 anonymousoverflow/templates anonymousoverflow/public
+          zip anonymousoverflow_windows_x86_64.zip anonymousoverflow/anonymousoverflow_windows_x86_64.exe anonymousoverflow/templates/* anonymousoverflow/public/*
+
+          mv anonymousoverflow_linux_x86_64.tar.gz binaries/
+          mv anonymousoverflow_windows_x86_64.zip binaries/
+
+          rm -fr anonymousoverflow/
+
+      - run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "Update AnonymousOverflow binaries"
+
+      - uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main

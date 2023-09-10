@@ -8,8 +8,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3.3.0
       
-      - uses: actions/setup-go@v4
       - run: sudo apt-get install -y ca-certificates git nodejs npm tar zip
+      - uses: actions/setup-go@v4
 
       - run: |
           mkdir rimgo
@@ -34,7 +34,7 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add -A
-          git commit -m "Update rimgo binary"
+          git commit -m "Update rimgo binaries"
 
       - uses: ad-m/github-push-action@v0.6.0
         with:
