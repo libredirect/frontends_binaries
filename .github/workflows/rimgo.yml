@@ -6,19 +6,36 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v3.3.0
+      
       - uses: actions/setup-go@v4
-      
-      - run: sudo apt-get install -y ca-certificates git nodejs npm
-      
-      - run: git clone https://codeberg.org/rimgo/rimgo
-      
-      - working-directory: ./rimgo
-        run: go mod download
-      
-      - working-directory: ./rimgo
-        run: go build -ldflags "-X codeberg.org/rimgo/rimgo/pages.VersionInfo=$(date '+%Y-%m-%d')-$(git rev-list --abbrev-commit -1 HEAD)"
+      - run: sudo apt-get install -y ca-certificates git nodejs npm tar zip
 
-      - uses: actions/upload-artifact@v3
+      - run: |
+          cd rimgo/
+          git clone --depth 1 https://codeberg.org/rimgo/rimgo
+          cd rimgo/
+          go mod download
+          GOARCH=amd64 GOOS=linux   go build -ldflags "-X codeberg.org/rimgo/rimgo/pages.VersionInfo=$(date '+%Y-%m-%d')-$(git rev-list --abbrev-commit -1 HEAD)"
+          mv rimgo     ../rimgo_linux_x86_64
+          GOARCH=amd64 GOOS=windows go build -ldflags "-X codeberg.org/rimgo/rimgo/pages.VersionInfo=$(date '+%Y-%m-%d')-$(git rev-list --abbrev-commit -1 HEAD)"
+          mv rimgo.exe ../rimgo_windows_x86_64.exe
+          mv views/ ../
+          mv static/ ../
+          cd ../../
+          tar -czvf rimgo_linux_x86_64.tar.gz rimgo/rimgo_linux_x86_64       rimgo/views   rimgo/static
+          zip       rimgo_windows_x86_64.zip  rimgo/rimgo_windows_x86_64.exe rimgo/views/* rimgo/static/*
+          mv rimgo_linux_x86_64.tar.gz binaries/
+          mv rimgo_windows_x86_64.zip binaries/
+          rm -fr rimgo/rimgo/ rimgo/rimgo_linux_x86_64 rimgo/rimgo_windows_x86_64.exe rimgo/views rimgo/static
+
+      - run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "Update rimgo binary"
+
+      - uses: ad-m/github-push-action@v0.6.0
         with:
-          path: ./rimgo/rimgo
-  
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
