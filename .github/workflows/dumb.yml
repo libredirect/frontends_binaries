@@ -1,0 +1,44 @@
+name: Dumb build
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3.3.0
+      
+      - run: sudo apt-get install -y git tar zip
+      - uses: actions/setup-go@v4
+
+      - run: |
+          mkdir dumb
+          cd dumb/
+          git clone --depth 1 https://github.com/rramiachraf/dumb
+          cd dumb/
+
+          GOARCH=amd64 GOOS=linux go build && mv dumb ../dumb_linux_x86_64
+          GOARCH=amd64 GOOS=windows go build && mv dumb.exe ../dumb_windows_x86_64.exe
+          mv views/ ../
+          mv static/ ../
+
+          cd ../../
+
+          tar -czvf dumb_linux_x86_64.tar.gz dumb/dumb_linux_x86_64 dumb/views dumb/static
+          zip dumb_windows_x86_64.zip dumb/dumb_windows_x86_64.exe dumb/views/* dumb/static/*
+
+          mv dumb_linux_x86_64.tar.gz binaries/
+          mv dumb_windows_x86_64.zip binaries/
+
+          rm -fr dumb/
+
+      - run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "Update Dumb binaries"
+
+      - uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
