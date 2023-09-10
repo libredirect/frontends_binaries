@@ -24,8 +24,8 @@ jobs:
           
           mv public/ ../
           cd ../../
-          tar -czvf nitter_linux_x86_64.tar.gz ./nitter/nitter_linux_x86_64 ./nitter/nitter.conf ./nitter/public
-          zip nitter_windows_x86_64.zip ./nitter/nitter_windows_x86_64.exe ./nitter/nitter.conf ./nitter/public/*
+          tar -czvf nitter_linux_x86_64.tar.gz ./nitter/nitter_linux_x86_64 ./config/nitter/nitter.conf ./nitter/public
+          zip nitter_windows_x86_64.zip ./nitter/nitter_windows_x86_64.exe ./config/nitter/nitter.conf ./nitter/public/*
           mv nitter_linux_x86_64.tar.gz binaries/
           mv nitter_windows_x86_64.zip binaries/
 
