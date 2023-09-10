@@ -15,15 +15,15 @@ jobs:
           mkdir simplytranslate
           cd simplytranslate/
           git clone --depth 1 https://codeberg.org/SimpleWeb/SimplyTranslate
-          cd SimplyTranslate/
+          cd SimplyTranslate/web/
           go mod download
           GOARCH=amd64 GOOS=linux go build -o simplytranslate_linux_x86_64
-          mv simplytranslate_linux_x86_64 ../
+          mv simplytranslate_linux_x86_64 ../../
           GOARCH=amd64 GOOS=windows go build -o simplytranslate_windows_x86_64.exe
-          mv simplytranslate_windows_x86_64.exe ../
-          mv views/ ../
-          mv static/ ../
-          cd ../../
+          mv simplytranslate_windows_x86_64.exe ../../
+          mv views/ ../../
+          mv static/ ../../
+          cd ../../../
           tar -czvf simplytranslate_linux_x86_64.tar.gz simplytranslate/simplytranslate_linux_x86_64       simplytranslate/views   simplytranslate/static
           zip       simplytranslate_windows_x86_64.zip  simplytranslate/simplytranslate_windows_x86_64.exe simplytranslate/views/* simplytranslate/static/*
           mv simplytranslate_linux_x86_64.tar.gz binaries/
