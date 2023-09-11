@@ -16,6 +16,7 @@ jobs:
           cd rimgo/
           git clone --depth 1 https://codeberg.org/rimgo/rimgo
           cd rimgo/
+          npx tailwindcss -i static/tailwind.css -o static/app.css -m
           go mod download
           GOARCH=amd64 GOOS=linux   go build -ldflags "-X codeberg.org/rimgo/rimgo/pages.VersionInfo=$(date '+%Y-%m-%d')-$(git rev-list --abbrev-commit -1 HEAD)"
           mv rimgo     ../rimgo_linux_x86_64
