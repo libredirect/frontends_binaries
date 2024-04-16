@@ -1,4 +1,4 @@
-name: LibReddit build
+name: Redlib build
 
 on: [workflow_dispatch]
 
