@@ -18,7 +18,7 @@ jobs:
           mkdir redlib
           cd redlib/
           latest_tag = git describe --tags $(git rev-list --tags --max-count=1)
-          git clone --depth 1 --branch $latest_tag https://github.com/redlib-org/redlib/
+          git clone --depth 1 --branch ($latest_tag) https://github.com/redlib-org/redlib/
           cd redlib/
           
           cargo build --target x86_64-unknown-linux-gnu --release
