@@ -22,10 +22,10 @@ jobs:
           cd redlib/
           
           cargo build --target x86_64-unknown-linux-gnu --release
-          mv target/x86_64-unknown-linux-gnu/release/redlib ../redlib_linux_x86_64
+          mv target/x86_64-unknown-linux-gnu/release/libreddit ../redlib_linux_x86_64
           
           cargo build --target x86_64-pc-windows-gnu --release
-          mv target/x86_64-pc-windows-gnu/release/redlib.exe ../redlib_windows_x86_64.exe
+          mv target/x86_64-pc-windows-gnu/release/libreddit.exe ../redlib_windows_x86_64.exe
           
           cd ../../
           
