@@ -1,0 +1,40 @@
+name: GotHub build
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3.3.0
+      
+      - run: sudo apt-get install -y ca-certificates git tar zip
+      - uses: actions/setup-go@v4
+
+      - run: |
+          mkdir gothub
+          cd gothub/
+          git clone https://codeberg.org/gothub/gothub.git
+          cd gothub/
+          git checkout master
+          GOARCH=amd64 GOOS=linux go build -o gothub_linux_x86_64 -ldflags="-X codeberg.org/gothub/gothubs/utils.Branch=$(git rev-parse --abbrev-ref HEAD)"
+          mv gothub_linux_x86_64 ../../
+          GOARCH=amd64 GOOS=linux go build -o gothub_windows_x86_64.exe -ldflags="-X codeberg.org/gothub/gothubs/utils.Branch=$(git rev-parse --abbrev-ref HEAD)"
+          mv gothub_windows_x86_64.exe ../../
+          cd ../../
+          tar -czvf gothub_linux_x86_64.tar.gz gothub/gothub_linux_x86_64
+          zip  gothub_windows_x86_64.zip  gothub/gothub_windows_x86_64.exe
+          mv gothub_linux_x86_64.tar.gz binaries/
+          mv gothub_windows_x86_64.zip binaries/
+          rm -fr gothub/
+
+      - run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "Update SimplyTranslate binaries"
+
+      - uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
