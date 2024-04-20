@@ -23,10 +23,13 @@ jobs:
           
           GOARCH=amd64 GOOS=linux go build -o gothub_windows_x86_64.exe -ldflags="-X codeberg.org/gothub/gothubs/utils.Branch=$(git rev-parse --abbrev-ref HEAD)"
           mv gothub_windows_x86_64.exe ../
+
+          mv views/ ../../
+          mv static/ ../../
           
           cd ../../
-          tar -czvf gothub_linux_x86_64.tar.gz gothub/gothub_linux_x86_64
-          zip  gothub_windows_x86_64.zip  gothub/gothub_windows_x86_64.exe
+          tar -czvf gothub_linux_x86_64.tar.gz gothub/gothub_linux_x86_64 gothub/views gothub/static
+          zip  gothub_windows_x86_64.zip  gothub/gothub_windows_x86_64.exe gothub/views/* gothub/static/*
           mv gothub_linux_x86_64.tar.gz binaries/
           mv gothub_windows_x86_64.zip binaries/
           rm -fr gothub/
