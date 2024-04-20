@@ -1,4 +1,4 @@
-name: Rust
+name: Neuters
 on: [workflow_dispatch]
 jobs:
   build:
