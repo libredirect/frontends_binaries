@@ -1,0 +1,60 @@
+name: LibMedium
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3.3.0
+      
+      - run: sudo apt install -y git tar zip mingw-w64 pkg-config libssl-dev
+      
+      - uses: brndnmtthws/rust-action-rustup@v1.0.0
+        with:
+          targets: x86_64-unknown-linux-gnu x86_64-pc-windows-gnu      
+
+      - run: |
+          mkdir libmedium
+          cd libmedium/
+          git clone --depth 1 https://github.com/realaravinth/libmedium
+          cd libmedium/
+          
+          cargo build --target x86_64-unknown-linux-gnu --release
+          mv target/x86_64-unknown-linux-gnu/release/libmedium ../libmedium_linux_x86_64
+          
+          cargo build --target x86_64-pc-windows-gnu --release
+          mv target/x86_64-pc-windows-gnu/release/libmedium.exe ../libmedium_windows_x86_64.exe
+
+          cd ../
+
+          echo "debug = true
+          source_code = \"https://git.batsense.net/realaravinth/libmedium\"
+          cache = \"./var/\"
+          [server]
+          port = 10050
+          ip= \"127.0.0.1\" 
+          domain = \"libmedium.localhost:8080\"
+          allow_registration = true
+          proxy_has_tls = false" > config.toml
+          
+          cd ../
+          
+          tar -czvf libmedium_linux_x86_64.tar.gz ./libmedium/libmedium_linux_x86_64 ./libmedium/config.toml
+          zip libmedium_windows_x86_64.zip ./libmedium/libmedium_windows_x86_64.exe ./libmedium/config.toml
+          
+          mv libmedium_linux_x86_64.tar.gz binaries/
+          mv libmedium_windows_x86_64.zip binaries/
+          
+          rm -fr libmedium/
+
+      - run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git commit -m "Update libmedium binaries"
+
+      - uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main
