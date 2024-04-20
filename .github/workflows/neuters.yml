@@ -1,0 +1,48 @@
+name: Rust
+on: [workflow_dispatch]
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+    - uses: actions/checkout@v3.3.0    
+    
+    - run: sudo apt install -y git tar zip mingw-w64
+      
+    - uses: brndnmtthws/rust-action-rustup@v1.0.0
+      with:
+          targets: x86_64-unknown-linux-gnu x86_64-pc-windows-gnu      
+      
+    - name: Build Release
+      run: |
+        mkdir neuters
+        cd neuters/
+        git clone --depth 1 https://github.com/HookedBehemoth/neuters
+        cd neuters/
+        
+        cargo build --release --target x86_64-unknown-linux-gnu
+        mv target/x86_64-unknown-linux-gnu/release/neuters ../neuters_linux_x86_64
+
+        cargo build --target x86_64-pc-windows-gnu --release
+        mv target/x86_64-pc-windows-gnu/release/neuters.exe ../neuters_windows_x86_64.exe
+
+        cd ../../
+
+        tar -czvf neuters_linux_x86_64.tar.gz ./neuters/neuters_linux_x86_64
+        zip neuters_windows_x86_64.zip ./neuters/neuters_windows_x86_64.exe
+        
+        mv neuters_linux_x86_64.tar.gz binaries/
+        mv neuters_windows_x86_64.zip binaries/
+        
+        rm -fr neuters/
+
+    - run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add -A
+        git commit -m "Update neuters binaries"
+
+    - uses: ad-m/github-push-action@v0.6.0
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
+    
