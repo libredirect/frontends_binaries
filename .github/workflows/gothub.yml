@@ -25,11 +25,11 @@ jobs:
           mv gothub_windows_x86_64.exe ../
 
           mv views/ ../../
-          mv static/ ../../
+          mv public/ ../../
           
           cd ../../
-          tar -czvf gothub_linux_x86_64.tar.gz gothub/gothub_linux_x86_64 gothub/views gothub/static
-          zip  gothub_windows_x86_64.zip  gothub/gothub_windows_x86_64.exe gothub/views/* gothub/static/*
+          tar -czvf gothub_linux_x86_64.tar.gz gothub/gothub_linux_x86_64 gothub/views gothub/public
+          zip  gothub_windows_x86_64.zip  gothub/gothub_windows_x86_64.exe gothub/views/* gothub/public/*
           mv gothub_linux_x86_64.tar.gz binaries/
           mv gothub_windows_x86_64.zip binaries/
           rm -fr gothub/
